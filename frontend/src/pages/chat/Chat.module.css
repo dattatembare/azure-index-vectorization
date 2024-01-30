@@ -1,0 +1,362 @@
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px
+}
+
+.chatRoot {
+    flex: 1;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    gap: 20px;
+}
+
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: radial-gradient(108.78% 108.78% at 50.02% 19.78%, #FFFFFF 57.29%, #EEF6FE 100%);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 0px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
+}
+
+.chatEmptyState {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chatEmptyStateTitle {
+    font-weight: 700;
+    font-size: 36px;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+    line-height: 24px;
+    margin-top: 36px;
+    margin-bottom: 0px;
+}
+
+.chatEmptyStateSubtitle {
+    margin-top: 20px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    display: flex;
+    align-items: flex-end;
+    text-align: center;
+    letter-spacing: -0.01em;
+    color: #616161;
+}
+
+.chatIcon {
+    height: 62px;
+    width: 62px;
+}
+
+.chatMessageStream {
+    flex-grow: 1;
+    max-width: 1028px;
+    width: 100%;
+    overflow-y: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+}
+
+.chatMessageUser {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.chatMessageUserMessage {
+    padding: 20px;
+    background: #EDF5FD;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 0px 2px rgba(0, 0, 0, 0.12);
+    /* font-family: "Human BBY Digital"; */
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #040c13;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 800px;
+}
+
+.chatMessageGpt {
+    margin-bottom: 12px;
+    max-width: 80%;
+    display: flex;
+}
+
+.chatInput {
+    background: #e5e7eb;
+    opacity: 0.9;
+    border-radius: 4px;
+    width: -webkit-fill-available;
+    position: sticky;
+    flex: 0 0 100px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.clearChatBroom {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 12px;
+    top: 66px;
+    color: #FFFFFF;
+    border: 1px solid #D1D1D1;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+.dropdownContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 86px;
+    height: 32px;
+    border-radius: 4px;
+    flex: none;
+    order: 1;
+    position: absolute;
+    right: 78px;
+    cursor: pointer;
+}
+
+.stopGeneratingContainer {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 16px;
+    gap: 4px;
+    width: 161px;
+    height: 32px;
+    left: calc(50% - 161px / 2 + 25.8px);
+    bottom: 116px;
+    border: 1px solid #D1D1D1;
+    border-radius: 16px;
+    margin-top: 8px;
+}
+
+.stopGeneratingIcon {
+    width: 14px;
+    height: 14px;
+    color: #424242;
+}
+
+.stopGeneratingText {
+    height: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #040c13;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.citationPanel {
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 16px;
+    gap: 8px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 0px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    flex: auto;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0.3;
+    max-width: 30%;
+    overflow-y: scroll;
+    max-height: calc(100vh - 100px);
+    background-image: linear-gradient(rgb(0, 70, 190) 23.19%, rgb(0, 30, 115) 89.73%)
+}
+
+.citationPanelHeaderContainer {
+    width: 100%;
+}
+
+.citationPanelHeader {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: white;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.citationPanelDismiss {
+    width: 18px;
+    height: 18px;
+    color: white;
+}
+
+.citationPanelDismiss:hover {
+    background-color: #D1D1D1;
+    cursor: pointer;
+}
+
+.citationPanelTitle {
+    font: "Human BBY Digital";
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    color: white;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.citationPanelContent {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: white;
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+} 
+
+.citationPanelContent a{
+    color: white;
+}
+
+.header {
+    background-color: rgb(255, 255, 255);
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    min-height: 64px;
+}
+
+.headerTitleContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 14px;
+    text-decoration: none;
+}
+
+.headerTitle {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 28px;
+    display: flex;
+    align-items: flex-end;
+    color: #040c13;
+}
+
+.headerIcon {
+    margin-left: 36px;
+}
+
+.shareButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 12px;
+    gap: 4px;
+    width: 86px;
+    height: 32px;
+    background: radial-gradient(109.81% 107.82% at 100.1% 90.19%, #0F6CBD 33.63%, #2D87C3 70.31%, #8DDDD8 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    border-radius: 4px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
+
+.shareButton {
+    color: #FFFFFF;
+}
+
+.shareButtonText {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.urlTextBox {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #707070;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+}
+
+.copyButtonContainer {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 12px;
+    gap: 4px;
+    background: #FFFFFF;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+}
+
+.copyButtonContainer:hover {
+    cursor: pointer;
+    background: #D1D1D1;
+}
+
+.copyButton {
+    color: #424242;
+}
+
+.copyButtonText {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #040c13;
+}

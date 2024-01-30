@@ -1,0 +1,900 @@
+{
+  "employeeNumber": {
+    "keywords": [
+      "employee",
+      "number",
+      "numbers",
+      "employeeNumber"
+    ],
+    "score": [
+      "employee",
+      "number"
+    ],
+    "description": " your employee number is {value} "
+  },
+  "username": {
+    "keywords": [
+      "user",
+      "name",
+      "username",
+      "aid",
+      "employee",
+      "worker",
+      "Id",
+      "employeeId",
+      "workerId"
+    ],
+    "score": [
+      "my",
+      "user"
+    ],
+    "description": " your username is {value} "
+  },
+  "preferredFirstName": {
+    "keywords": [
+      "preferred",
+      "first",
+      "name",
+      "firstName"
+    ],
+    "score": [
+      "first"
+    ],
+    "description": " your first name is {value} "
+  },
+  "preferredLastName": {
+    "keywords": [
+      "preferred",
+      "last",
+      "name",
+      "LastName"
+    ],
+    "score": [
+      "last"
+    ],
+    "description": " your last name is {value} "
+  },
+  "preferredName": {
+    "keywords": [
+      "preferred",
+      "name",
+      "who am I"
+    ],
+    "score": [
+      "my"
+    ],
+    "description": " your name is {value} "
+  },
+  "gender": {
+    "keywords": [
+      "gender"
+    ],
+    "description": " your gender is {value} "
+  },
+  "userPersonType": {
+    "keywords": [
+      "user",
+      "person",
+      "type",
+      "types",
+      "userPersonType"
+    ],
+    "description": " your user person type is {value} "
+  },
+  "systemPersonType": {
+    "keywords": [
+      "system",
+      "person",
+      "type",
+      "types",
+      "systemPersonType"
+    ],
+    "description": " your system person type is {value} "
+  },
+  "workerType": {
+    "keywords": [
+      "worker",
+      "type",
+      "types",
+      "workerType"
+    ],
+    "description": " your worker type is {value} "
+  },
+  "employmentCategory": {
+    "keywords": [
+      "employment",
+      "category",
+      "categories",
+      "employmentCategory"
+    ],
+    "description": " your employment category is {value} "
+  },
+  "isExempt": {
+    "keywords": [
+      "exempted",
+      "exempt",
+      "isExempt"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "true": "Yes, you are exempted",
+      "false": "No, you are not exempted"
+    }
+  },
+  "gradeRateStructure": {
+    "keywords": [
+      "grade",
+      "rate",
+      "rates",
+      "structure",
+      "gradeRateStructure"
+    ],
+    "description": " your grade rate structure is {value} "
+  },
+  "emailAddress": {
+    "keywords": [
+      "email",
+      "e-mail",
+      "address"
+    ],
+    "description": " your email address is {value} "
+  },
+  "payType": {
+    "keywords": [
+      "pay",
+      "type",
+      "types",
+      "payType"
+    ],
+    "description": " your pay type is {value} "
+  },
+  "payGroup": {
+    "keywords": [
+      "pay",
+      "group",
+      "groups",
+      "payGroup"
+    ],
+    "description": " your pay group is {value} "
+  },
+  "employeeStatus": {
+    "keywords": [
+      "employee",
+      "employment",
+      "work",
+      "status",
+      "employeeStatus"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "active": "your employee status is active",
+      "inactive": "your employee status is not active",
+      "terminated": "your employee status is not active",
+      "onleave": "your employee status is on leave"
+    }
+  },
+  "isActive": {
+    "keywords": [
+      "employee",
+      "isActive",
+      "active"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "true": "Yes, you are active employee",
+      "false": "No, you are not active employee"
+    }
+  },
+  "isTerminated": {
+    "keywords": [
+      "employee",
+      "isTerminated",
+      "terminated",
+      "terminate"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "true": "Yes, you are terminated",
+      "false": "No, you are not terminated"
+    }
+  },
+  "location": {
+    "keywords": [
+      "location",
+      "info",
+      "information",
+      "detail",
+      "details"
+    ],
+    "score": [
+      "location"
+    ],
+    "description": " your location is {value} "
+  },
+  "jobCode": {
+    "keywords": [
+      "job",
+      "jobs",
+      "code",
+      "codes",
+      "jobCode"
+    ],
+    "description": " your job code is {value} "
+  },
+  "jobTitle": {
+    "keywords": [
+      "job",
+      "jobs",
+      "title",
+      "titles",
+      "jobTitle"
+    ],
+    "description": " your job title is {value} "
+  },
+  "businessTitle": {
+    "keywords": [
+      "business",
+      "title",
+      "titles",
+      "businessTitle"
+    ],
+    "description": " your business title is {value} "
+  },
+  "hireDate": {
+    "keywords": [
+      "hireDate"
+    ],
+    "description": " your hire date is {value} "
+  },
+  "originalHireDate": {
+    "keywords": [
+      "original",
+      "hire",
+      "date",
+      "dates",
+      "hireDate",
+      "originalHireDate",
+      "worked",
+      "working",
+      "long"
+    ],
+    "description": " your original hire date is {value} ",
+    "messageToOpenAI": "If my original hire date is {text} then How long have I worked for Best Buy?"
+  },
+  "glLocationOrganizationName": {
+    "keywords": [
+      "glLocationOrganizationName",
+      "gl",
+      "Location",
+      "Locations",
+      "Organization",
+      "Name",
+      "names"
+    ],
+    "description": " your geo location organization name is {value} "
+  },
+  "organizationName": {
+    "keywords": [
+      "organizationName",
+      "organization",
+      "Name",
+      "names"
+    ],
+    "description": " your organization name is {value} "
+  },
+  "companyName": {
+    "keywords": [
+      "companyName",
+      "company",
+      "Name",
+      "names"
+    ],
+    "description": " your company name is {value} "
+  },
+  "companyId": {
+    "keywords": [
+      "company",
+      "id",
+      "companyId"
+    ],
+    "description": " your company Id is {value} "
+  },
+  "costCenter": {
+    "keywords": [
+      "costCenter",
+      "cost",
+      "Center",
+      "Centers"
+    ],
+    "description": " your cost center is {value} "
+  },
+  "costCenterId": {
+    "keywords": [
+      "costCenterId",
+      "cost",
+      "Center",
+      "Centers",
+      "Id",
+      "Ids"
+    ],
+    "description": " your cost center Id is {value} "
+  },
+  "glLocationId": {
+    "keywords": [
+      "glLocationId",
+      "gl",
+      "Location",
+      "Id",
+      "Ids"
+    ],
+    "score": [
+      "location"
+    ],
+    "description": " your geo location Id is {value} "
+  },
+  "glLocationCodeSubType": {
+    "keywords": [
+      "glLocationCodeSubType",
+      "gl",
+      "Location",
+      "Locations",
+      "Code",
+      "Sub",
+      "Type",
+      "Types"
+    ],
+    "description": " your geo location code sub type is {value} "
+  },
+  "glCodeHierarchyKey": {
+    "keywords": [
+      "glCodeHierarchyKey",
+      "gl",
+      "Code",
+      "Codes",
+      "Hierarchy",
+      "Key"
+    ],
+    "description": " your geo location code hierarchy key is {value} "
+  },
+  "homeAddress": {
+    "keywords": [
+      "home",
+      "address",
+      "city",
+      "state",
+      "states",
+      "postalCode",
+      "country",
+      "countries",
+      "zip",
+      "county"
+    ],
+    "description": " your home address is {value} "
+  },
+  "workAddress": {
+    "keywords": [
+      "work",
+      "address",
+      "city",
+      "state",
+      "states",
+      "postalCode",
+      "country",
+      "countries",
+      "zip",
+      "county"
+    ],
+    "description": " your work address is {value} "
+  },
+  "manager": {
+    "employeeNumber": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "employee",
+        "number",
+        "employeeNumber",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "employee"
+      ],
+      "description": " your manager's employee number is {value} "
+    },
+    "username": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "user",
+        "name",
+        "username",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "user"
+      ],
+      "description": " your manager's username is {value} "
+    },
+    "preferredFirstName": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "name",
+        "names",
+        "preferredFirstName",
+        "preferred",
+        "firstName",
+        "first",
+        "phone",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "first"
+      ],
+      "description": " your manager's first name is {value} "
+    },
+    "preferredLastName": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "name",
+        "names",
+        "preferredLastName",
+        "preferred",
+        "lastName",
+        "last",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "last"
+      ],
+      "description": " your manager's last name is {value} "
+    },
+    "preferredName": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "full",
+        "name",
+        "names",
+        "preferredName",
+        "preferred",
+        "supervisor",
+        "supervisor's",
+        "supervisors",
+        "who is my manager"
+      ],
+      "score": [
+        "manager"
+      ],
+      "description": " your manager's name is {value} "
+    },
+    "jobCode": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "jobCode",
+        "job",
+        "code",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "job"
+      ],
+      "description": " your manager's job code is {value} "
+    },
+    "jobTitle": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "jobTitle",
+        "job",
+        "title",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "job"
+      ],
+      "description": " your manager's job title is {value} "
+    },
+    "workPhone": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "work",
+        "workPhone",
+        "phone",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "phone"
+      ],
+      "description": " your manager's work phone number is {value} "
+    },
+    "locationPhone": {
+      "keywords": [
+        "manager",
+        "manager's",
+        "managers",
+        "work",
+        "workPhone",
+        "locationPhone",
+        "location",
+        "phone",
+        "supervisor",
+        "supervisor's",
+        "supervisors"
+      ],
+      "score": [
+        "manager",
+        "phone"
+      ],
+      "description": " your manager's work location phone number is {value} "
+    }
+  },
+  "discountEligible": {
+    "keywords": [
+      "discountEligible",
+      "discount",
+      "Eligible"
+    ],
+    "score": [
+      "discount"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "true": "Yes, you are eligible for the employee discount",
+      "false": "No, you are not eligible for the employee discount"
+    }
+  },
+  "workdayId": {
+    "keywords": [
+      "workdayId",
+      "workday",
+      "Id"
+    ],
+    "description": " your workday Id is {value} "
+  },
+  "hrPartner": {
+    "keywords": [
+      "hrPartner",
+      "hr",
+      "Partner"
+    ],
+    "description": " your HR partner is {value} "
+  },
+  "managementLevel": {
+    "keywords": [
+      "managementLevel",
+      "management",
+      "Level",
+      "Levels"
+    ],
+    "description": " your management level is {value} "
+  },
+  "basePayCurrency": {
+    "keywords": [
+      "basePayCurrency",
+      "base",
+      "Pay",
+      "Currency"
+    ],
+    "description": " your base pay currency is {value} "
+  },
+  "approvalAuthorityLimit": {
+    "keywords": [
+      "approvalAuthorityLimit",
+      "approval",
+      "Authority",
+      "limit",
+      "limits"
+    ],
+    "description": " your base pay currency is {value} "
+  },
+  "isPeopleLeader": {
+    "keywords": [
+      "isPeopleLeader",
+      "people",
+      "leader",
+      "leaders"
+    ],
+    "isResponseMultiple": true,
+    "description": {
+      "yes": "Yes, you are a people leader",
+      "no": "No, you are not a people leader"
+    }
+  },
+  "anniversaryDate": {
+    "keywords": [
+      "anniversaryDate",
+      "anniversary",
+      "date",
+      "dates"
+    ],
+    "description": " your anniversary date is {value} "
+  },
+  "absence": {
+    "ptoBalance": {
+      "keywords": [
+        "ptoBalance",
+        "pto",
+        "balance",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "leave",
+        "day",
+        "days",
+        "remain",
+        "remaining",
+        "available",
+        "pending",
+        "left"
+      ],
+      "description": " your Workday PTO balance is {value} "
+    },
+    "eligibleToPurchasePto": {
+      "keywords": [
+        "eligibleToPurchasePto",
+        "Eligible",
+        "purchase",
+        "purchased",
+        "pto",
+        "buy",
+        "leave"
+      ],
+      "isResponseMultiple": true,
+      "description": {
+        "eligible": "Yes, you are eligible to purchase PTO",
+        "not_eligible": "No, you are not eligible to purchase PTO"
+      }
+    },
+    "ptoRefreshDate": {
+      "keywords": [
+        "ptoRefreshDate",
+        "pto refresh date",
+        "pto",
+        "ptos",
+        "refresh",
+        "refreshes",
+        "refreshed",
+        "date",
+        "dates",
+        "leave",
+        "get",
+        "getting",
+        "expire",
+        "expires",
+        "expired"
+      ],
+      "description": " your PTO refresh date is {value} "
+    },
+    "timeOffPlanType": {
+      "keywords": [
+        "timeOffPlanType",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "plan",
+        "plans",
+        "type",
+        "types",
+        "pto",
+        "policy",
+        "policies",
+        "leave"
+      ],
+      "description": " your time off plan type is {value} ",
+      "messageToOpenAI": "give me detailed information about {text}"
+    },
+    "vacationBalance": {
+      "keywords": [
+        "vacationBalance",
+        "vacation",
+        "vacations",
+        "Balance",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "pto",
+        "leave",
+        "day",
+        "days",
+        "remain",
+        "remaining",
+        "available",
+        "pending",
+        "left",
+        "eligible",
+        "plan",
+        "policy",
+        "policies"
+      ],
+      "description": " your vacation balance is {value} "
+    },
+    "purchasedPtoBalance": {
+      "keywords": [
+        "purchasedPtoBalance",
+        "purchased",
+        "purchase",
+        "pto",
+        "Balance",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "leave",
+        "day",
+        "days",
+        "remain",
+        "remaining",
+        "available",
+        "pending",
+        "left"
+      ],
+      "description": " your purchased PTO balance is {value} "
+    },
+    "sickPlanEligibility": {
+      "keywords": [
+        "sickPlanEligibility",
+        "sick",
+        "plan",
+        "plans",
+        "Eligibility",
+        "eligible",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "pto",
+        "leave",
+        "policy",
+        "policies"
+      ],
+      "isResponseMultiple": true,
+      "description": {
+        "eligible": " your sick leave plan type is {value} ",
+        "not_eligible": " you are not eligible for sick leave plan ",
+        "yes": "Yes, you are eligible for sick leave plan, your sick leave plan type is {value} ",
+        "no": "No, you are not eligible for sick leave plan"
+      },
+      "messageToOpenAI": "give me detailed information about {text}"
+    },
+    "sickPlanBalance": {
+      "keywords": [
+        "sickPlanBalance",
+        "sick",
+        "Balance",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "pto",
+        "leave",
+        "day",
+        "days",
+        "remain",
+        "remaining",
+        "available",
+        "pending",
+        "left"
+      ],
+      "description": " your Sick leave Plan balance is {value} "
+    },
+    "sickBank": {
+      "keywords": [
+        "sickBank",
+        "sick",
+        "Bank",
+        "Balance",
+        "timeoff",
+        "time",
+        "time-off",
+        "off",
+        "pto",
+        "leave",
+        "day",
+        "days",
+        "remain",
+        "remaining",
+        "available",
+        "pending",
+        "left"
+      ],
+      "description": " your Sick Bank (carry forward sick leave) balance is {value}"
+    },
+    "sickMandate": {
+      "keywords": [
+        "sickMandate",
+        "sick",
+        "Mandate"
+      ],
+      "description": " your sick mandate is {value} "
+    }
+  },
+  "lastUpdatedTimestamp": {
+    "keywords": [
+      "lastUpdatedTimestamp",
+      "last",
+      "Updated",
+      "Timestamp",
+      "Timestamps",
+      "modified",
+      "date",
+      "dates"
+    ],
+    "description": " your last updated time is {value} "
+  },
+  "miscellaneous": {
+    "keywords": [
+      "employee",
+      "benefit",
+      "benefits",
+      "open",
+      "enrollment",
+      "job",
+      "schedule",
+      "schedules",
+      "date",
+      "dates",
+      "skillset",
+      "skillsets",
+      "health",
+      "details",
+      "detail",
+      "detailed",
+      "info",
+      "information",
+      "perk",
+      "perks",
+      "tax",
+      "W-2",
+      "service now",
+      "snow",
+      "phone",
+      "number",
+      "pto",
+      "submit",
+      "donate",
+      "tlc",
+      "store",
+      "curbside",
+      "pickup",
+      "pick",
+      "up"
+    ],
+    "description": " This information is not available on this platform. Please find more information available on - https://connect.bestbuy.com/connectweb"
+  }
+}
