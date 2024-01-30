@@ -40,7 +40,7 @@ class OutputParserTool(ParserBase):
         for i in doc_ids:
             idx = i-1
             doc = source_documents[idx]
-            # print(f"doc{idx}", doc)
+            print(f"doc{idx}", doc)
 
             # Then update the citation object in the response, it needs to have filepath and chunk_id to render in the UI as a file
             messages[0]["content"]["citations"].append(

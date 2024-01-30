@@ -84,10 +84,10 @@ class SourceDocument:
     
     def get_markdown_url(self):
         url = quote(self.source, safe=':/')
-        # if '_SAS_TOKEN_PLACEHOLDER_' in url:
-        #     blob_client = AzureBlobStorageClient()
-        #     container_sas = blob_client.get_container_sas()
-        #     url = url.replace("_SAS_TOKEN_PLACEHOLDER_", container_sas)
+        if '_SAS_TOKEN_PLACEHOLDER_' in url:
+            blob_client = AzureBlobStorageClient()
+            container_sas = blob_client.get_container_sas()
+            url = url.replace("_SAS_TOKEN_PLACEHOLDER_", container_sas)
         return f"[{self.title}]({url})"
         
 class SourceDocumentEncoder(json.JSONEncoder):

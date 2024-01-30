@@ -20,8 +20,7 @@
         "rehype-raw": "^6.1.1",
         "remark-gfm": "^3.0.1",
         "remark-supersub": "^1.0.0",
-        "uuid": "^9.0.0",
-        "react-svg": "16.1.32"
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@types/lodash-es": "^4.17.7",

@@ -1,5 +1,6 @@
 __pycache__
 .venv
+.env
 .github
 frontend/node_modules
 admin
@@ -18,3 +19,4 @@ docker
 infrastructure
 .gitignore
 extra
+data

@@ -8,41 +8,18 @@ import openai
 import requests
 
 from backend.utilities.employee_data.word_search import find_in_value, search_json
-from backend.utilities.orchestrator.LangChainAgent import LangChainAgent
-from eds_util import USER_DETAILS_KEYS, EXCLUSION_KEYS_1, EXCLUSION_KEYS_2, USER_KEYS_1, USER_KEYS_2
+from eds_util import USER_KEYS, USER_DETAILS_KEYS
 
 mimetypes.add_type('application/javascript', '.js')
 mimetypes.add_type('text/css', '.css')
 
 from flask import Flask, Response, request, jsonify
 from dotenv import load_dotenv
-from typing import List
-
-from langchain.prompts import ChatPromptTemplate
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import BaseOutputParser
 
 load_dotenv()
 
 app = Flask(__name__)
-langchain_agent = LangChainAgent()
 
-class CommaSeparatedListOutputParser(BaseOutputParser[List[str]]):
-    """Parse the output of an LLM call to a comma-separated list."""
-    def parse(self, text: str) -> List[str]:
-        """Parse the output of an LLM call."""
-        return text.strip().split(", ")
-
-template = """
-Hello, I'm your virtual assistance.
-How can I help you?
-"""
-human_template = "{text}"
-
-chat_prompt = ChatPromptTemplate.from_messages([
-    ("system", template),
-    ("human", human_template),
-])
 
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
@@ -154,10 +131,6 @@ def stream_with_data(body, headers, endpoint, emp_data=None):
         }]
     }
     try:
-        # Added this block of code to resolve 400 - validation error.
-        if 'stop' in body and not body.get('stop'):
-            del body['stop']
-
         with s.post(endpoint, json=body, headers=headers, stream=True) as r:
             for line in r.iter_lines(chunk_size=10):
                 if line:
@@ -174,12 +147,9 @@ def stream_with_data(body, headers, endpoint, emp_data=None):
                     if role == "tool":
                         response["choices"][0]["messages"].append(lineJson["choices"][0]["messages"][0]["delta"])
                     elif role == "assistant":
-                        print_msg = ""
-                        if emp_data:
-                            print_msg = f"As per the available data, {emp_data} \n\n"
                         response["choices"][0]["messages"].append({
                             "role": "assistant",
-                            "content": f"{print_msg}"
+                            "content": f"Employee details: {emp_data} \n\n" if emp_data else ""
                         })
                     else:
                         deltaText = lineJson["choices"][0]["messages"][0]["delta"]["content"]
@@ -192,9 +162,6 @@ def stream_with_data(body, headers, endpoint, emp_data=None):
 
 
 def stream_static_content_data(result):
-    print_msg = "No data found for requested information or you do not have access to the data."
-    if result:
-        print_msg = f"As per the available data, {result} \n\n"
     response = {
         "id": "e7d687d1-50ac-4d63-a782-5b3d755380d6",
         "model": "gpt-35-turbo-16k",
@@ -205,7 +172,7 @@ def stream_static_content_data(result):
                 "messages": [
                     {
                         "role": "assistant",
-                        "content": f"{print_msg}"
+                        "content": f"Employee details: {result}"
                     }
                 ]
             }
@@ -221,46 +188,18 @@ def conversation_with_data(request, employee_number=None):
     _query = request_messages[-1].get('content')
     _search_words = [w.strip().lower() for w in _query.split()]
 
-    if not is_manager_personal_info(_search_words) and is_user(_query, _search_words):
-        search_dicts = search_json(_query, employee_number)
-        if search_dicts:
-            search_results = []
-            search_values = []
-            open_ai_message = 'find more information for '
-            for d in search_dicts:
-                for k, v in d.items():
-                    if 'description' == k:
-                        search_results.append(v)
-                        if 'messageToOpenAI' not in d:
-                            open_ai_message = f"{open_ai_message}, {v} and"
-                    elif 'messageToOpenAI' == k:
-                        open_ai_message = v
-                    elif 'keywords' != k and 'score' != k and 'isResponseMultiple' != k:
-                        search_values.append(v)
+    if find_in_value(USER_KEYS, _search_words):
+        search_result_list = search_json(_query, employee_number)
+        search_result = ''
+        for r in search_result_list:
+            for k, v in r.items():
+                search_result = f'{search_result} {k} = {v}'
 
-            _result = ''
-            if len(search_results) >= 1:
-                first_val = str(search_results[0])
-                if len(search_results) == 1:
-                    _result = first_val
-                else:
-                    _result = f"{first_val.strip()}, {', '.join(search_results[1:-1])} and {search_results[-1].strip()}"
-                # Added by Datta
-                return Response(stream_static_content_data(_result.strip()), mimetype='text/event-stream')
-
-            # if find_in_value(USER_DETAILS_KEYS, _search_words):
-            #     emp_data = _result
-            #     text = ''
-            #     if len(search_values) >= 1:
-            #         f_val = str(search_values[0])
-            #         if len(search_values) == 1:
-            #             text = f_val
-            #         else:
-            #             text = f"{f_val.strip()}, {', '.join(search_values[1:-1])} and {search_values[-1].strip()}"
-            #
-            #     request_messages[-1].update({'content': open_ai_message.format(text=text)})
-            # else:
-            #     return Response(stream_static_content_data(_result.strip()), mimetype='text/event-stream')
+        if find_in_value(USER_DETAILS_KEYS, _search_words):
+            emp_data = [''.join(r.values()) for r in search_result_list][0]
+            request_messages[-1].update({'content': f"{_query} and detailed information about {emp_data.strip()}"})
+        else:
+            return Response(stream_static_content_data(search_result.strip()), mimetype='text/event-stream')
 
     body, headers = prepare_body_headers_with_data(request)
     endpoint = f"https://{AZURE_OPENAI_RESOURCE}.openai.azure.com/openai/deployments/{AZURE_OPENAI_MODEL}/extensions/chat/completions?api-version={AZURE_OPENAI_API_VERSION}"
@@ -278,28 +217,12 @@ def conversation_with_data(request, employee_number=None):
             return Response(None, mimetype='text/event-stream')
 
 
-def is_manager_personal_info(_search_words):
-    return len(find_in_value(EXCLUSION_KEYS_1, _search_words)) > 1 and len(
-        find_in_value(EXCLUSION_KEYS_2, _search_words)) > 0
-
-
-def is_user(query, _search_words):
-    if len(find_in_value(USER_KEYS_1, _search_words)) > 0:
-        return True
-    else:
-        for key in USER_KEYS_2:
-            if key.lower() in query.lower():
-                return True
-
-    return False
-
-
 def stream_without_data(response):
-    response_text = ""
+    responseText = ""
     for line in response:
-        delta_text = line["choices"][0]["delta"].get('content')
-        if delta_text and delta_text != "[DONE]":
-            response_text += delta_text
+        deltaText = line["choices"][0]["delta"].get('content')
+        if deltaText and deltaText != "[DONE]":
+            responseText += deltaText
 
         response_obj = {
             "id": line["id"],
@@ -309,7 +232,7 @@ def stream_without_data(response):
             "choices": [{
                 "messages": [{
                     "role": "assistant",
-                    "content": response_text
+                    "content": responseText
                 }]
             }]
         }
@@ -381,83 +304,32 @@ def conversation_azure_byod():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/api/conversation/custom/<employee_number>", methods=["GET", "POST"])
-def conversation_custom(employee_number):
-    # try:
-    #     use_data = should_use_data()
-    #     if use_data:
-    #         return conversation_with_data(request, employee_number)
-    # except Exception as e:
-    #     logging.exception("Exception in /api/conversation/azure_byod")
-    #     return jsonify({"error": str(e)}), 500
+@app.route("/api/conversation/custom", methods=["GET", "POST"])
+def conversation_custom():
+    try:
+        use_data = should_use_data()
+        if use_data:
+            return conversation_with_data(request,'6004104')
+    except Exception as e:
+        logging.exception("Exception in /api/conversation/azure_byod")
+        return jsonify({"error": str(e)}), 500
 
     from backend.utilities.helpers.OrchestratorHelper import Orchestrator
     message_orchestrator = Orchestrator()
 
     try:
         user_message = request.json["messages"][-1]['content']
-        _search_words = [w.strip().lower() for w in user_message.split()]
-        employee_data = {'original_user_message': user_message}
-        if not is_manager_personal_info(_search_words) and is_user(user_message, _search_words):
-            search_dicts = search_json(user_message, employee_number)
-            if search_dicts:
-                search_results = []
-                search_values = []
-                questions_to_search_engine = []
-                open_ai_message = 'find more information for '
-                for d in search_dicts:
-                    for key, value in d.items():
-                        if 'description' == key:
-                            search_results.append(value)
-                            if 'messageToOpenAI' not in d:
-                                open_ai_message = f"{open_ai_message}, {value} and"
-                        elif 'messageToOpenAI' == key:
-                            open_ai_message = value
-                        elif 'keywords' != key and 'score' != key and 'isResponseMultiple' != key:
-                            search_values.append(value)
-                            questions_to_search_engine.append(f"What are the details of {value}?")
-
-                if len(questions_to_search_engine) > 1:
-                    employee_data['questions_to_search_engine'] = questions_to_search_engine
-
-                _result = ''
-                if len(search_results) >= 1:
-                    first_val = str(search_results[0])
-                    if len(search_results) == 1:
-                        _result = first_val
-                    else:
-                        _result = f"{first_val.strip()}, {', '.join(search_results[1:-1])} and {search_results[-1].strip()}"
-
-                if find_in_value(USER_DETAILS_KEYS, _search_words):
-                    employee_data['employee_data'] = _result.strip()
-                    # emp_data = _result
-                    text = ''
-                    if len(search_values) >= 1:
-                        f_val = str(search_values[0])
-                        if len(search_values) == 1:
-                            text = f_val
-                        else:
-                            search_values = [s for s in search_values if type(s) is not dict]
-                            text = f"{f_val.strip()}, {', '.join(search_values[1:-1])} and {search_values[-1].strip()}"
-                    # request_messages[-1].update({'content': open_ai_message.format(text=text)})
-                    if text:
-                        user_message = open_ai_message.format(text=text)
-                else:
-                    return Response(stream_static_content_data(_result.strip()), mimetype='text/event-stream')
-
         conversation_id = request.json["conversation_id"]
-        user_assistant_messages = list(
+        user_assistent_messages = list(
             filter(lambda x: x['role'] in ('user', 'assistant'), request.json["messages"][0:-1]))
         chat_history = []
-        for i, k in enumerate(user_assistant_messages):
+        for i, k in enumerate(user_assistent_messages):
             if i % 2 == 0:
-                chat_history.append((user_assistant_messages[i]['content'], user_assistant_messages[i + 1]['content']))
+                chat_history.append((user_assistent_messages[i]['content'], user_assistent_messages[i + 1]['content']))
         from backend.utilities.helpers.ConfigHelper import ConfigHelper
-
         messages = message_orchestrator.handle_message(user_message=user_message, chat_history=chat_history,
                                                        conversation_id=conversation_id,
-                                                       orchestrator=ConfigHelper.get_active_config_or_default().orchestrator,
-                                                       **employee_data)
+                                                       orchestrator=ConfigHelper.get_active_config_or_default().orchestrator)
 
         response_obj = {
             "id": "response.id",

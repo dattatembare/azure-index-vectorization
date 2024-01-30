@@ -16,8 +16,9 @@ class OrchestratorBase(ABC):
             'completion': 0,
             'total': 0
         }
+        print(f"New message id: {self.message_id} with tokens {self.tokens}")
         self.token_logger : TokenLogger = TokenLogger()
-        # self.conversation_logger : ConversationLogger = ConversationLogger()
+        self.conversation_logger : ConversationLogger = ConversationLogger()
     
     def log_tokens(self, prompt_tokens, completion_tokens):
         self.tokens['prompt'] += prompt_tokens
@@ -39,7 +40,7 @@ class OrchestratorBase(ABC):
                 "total_tokens": self.tokens['total']
             }
             self.token_logger.log("Conversation", custom_dimensions=custom_dimensions)
-        # if self.config.logging.log_user_interactions:
-        #     self.conversation_logger.log(messages=[{"role": "user", "content": user_message, "conversation_id": conversation_id}] + result)
+        if self.config.logging.log_user_interactions:  
+            self.conversation_logger.log(messages=[{"role": "user", "content": user_message, "conversation_id": conversation_id}] + result)          
         return result
         

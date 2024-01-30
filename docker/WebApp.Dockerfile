@@ -11,8 +11,7 @@ WORKDIR /home/node/app/frontend
 RUN npm run build
   
 FROM python:3.9.7-alpine3.14  
-RUN pip install --upgrade pip
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \  
     build-base \  
     libffi-dev \  
     openssl-dev \  
