@@ -11,6 +11,8 @@ from langchain.prompts import PromptTemplate
 from langchain.callbacks import get_openai_callback
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 
+from .common.Answer import Answer
+from .common.SourceDocument import SourceDocument
 from .helpers.AzureSearchHelper import AzureSearchHelper
 from .helpers.ConfigHelper import ConfigHelper
 from .helpers.LLMHelper import LLMHelper
@@ -41,7 +43,7 @@ class QuestionHandler:
 
         condense_question_prompt = PromptTemplate(template=config.prompts.condense_question_prompt, input_variables=["question", "chat_history"])
         answering_prompt = PromptTemplate(template=config.prompts.answering_prompt, input_variables=["question", "sources"])
-        
+
         question_generator = LLMChain(
             llm=self.llm, prompt=condense_question_prompt, verbose=True
         )
@@ -65,100 +67,120 @@ class QuestionHandler:
             result = chain({"question": question, "chat_history": chat_history})
 
         answer = result['answer'].replace('  ', ' ')
-        
-        was_message_filtered = False
-        post_total_tokens, post_prompt_tokens, post_completion_tokens = 0, 0, 0
-        if config.prompts.enable_post_answering_prompt:
-            post_answering_prompt = PromptTemplate(template=config.prompts.post_answering_prompt, input_variables=["question", "answer", "sources"])
-            post_answering_chain = LLMChain(llm=self.llm, prompt=post_answering_prompt, output_key="correct", verbose=True)
-            # Filter sources to only include used ones            
-            sources = [f"{doc.metadata['source']}: {doc.page_content}" for doc in result['source_documents'] if doc.metadata['source'] in answer]
-            sources = '\n'.join(sources)      
-     
-            with get_openai_callback() as cb_post:
-                post_result = post_answering_chain({"question": result["generated_question"], "answer": answer, "sources": sources})
-            
-            post_total_tokens, post_prompt_tokens, post_completion_tokens = cb_post.total_tokens, cb_post.prompt_tokens, cb_post.completion_tokens
-            was_message_filtered = not (post_result['correct'].lower() == 'true' or post_result['correct'].lower() == 'yes')
+        print(f"answer: {answer}")
+        # Generate Answer Object
+        source_documents = []
+        for source in result['source_documents']:
+            source_document = SourceDocument(
+                id=source.metadata["id"],
+                content=source.page_content,
+                title=source.metadata["title"],
+                source=source.metadata["source"],
+                chunk=source.metadata["chunk"],
+                offset=source.metadata["offset"],
+                page_number=source.metadata["page_number"],
+            )
+            source_documents.append(source_document)
+
+        clean_answer = Answer(question=question,
+                              answer=answer,
+                              source_documents=source_documents,
+                              prompt_tokens=cb.prompt_tokens,
+                              completion_tokens=cb.completion_tokens)
+        return clean_answer
+
+        # Commented by Datta
+        # was_message_filtered = False
+        # post_total_tokens, post_prompt_tokens, post_completion_tokens = 0, 0, 0
+        # if config.prompts.enable_post_answering_prompt:
+        #     post_answering_prompt = PromptTemplate(template=config.prompts.post_answering_prompt, input_variables=["question", "answer", "sources"])
+        #     post_answering_chain = LLMChain(llm=self.llm, prompt=post_answering_prompt, output_key="correct", verbose=True)
+        #     # Filter sources to only include used ones
+        #     sources = [f"{doc.metadata['source']}: {doc.page_content}" for doc in result['source_documents'] if doc.metadata['source'] in answer]
+        #     sources = '\n'.join(sources)
+        #
+        #     with get_openai_callback() as cb_post:
+        #         post_result = post_answering_chain({"question": result["generated_question"], "answer": answer, "sources": sources})
+        #
+        #     post_total_tokens, post_prompt_tokens, post_completion_tokens = cb_post.total_tokens, cb_post.prompt_tokens, cb_post.completion_tokens
+        #     was_message_filtered = not (post_result['correct'].lower() == 'true' or post_result['correct'].lower() == 'yes')
 
         # TODO: check if answer is safe with content safety
-
-
         # Setting log properties
-        log_properties = {
-            "custom_dimensions": {
-            }
-        }
-        if config.logging.log_tokens:
-            tokens_properties = {
-                "totalTokens": cb.total_tokens + post_total_tokens,
-                "promptTokens": cb.prompt_tokens + post_prompt_tokens,
-                "completionTokens": cb.completion_tokens + post_completion_tokens,
-            } 
-            log_properties['custom_dimensions'].update(tokens_properties)
-            
-        if config.logging.log_user_interactions:
-            user_interactions_properties = {
-                "userQuestion": question,
-                "userChatHistory": chat_history,
-                "generatedQuestion": result["generated_question"],
-                "sourceDocuments": list(map(lambda x: json.dumps(x.metadata), result["source_documents"])),
-                "messageFiltered": was_message_filtered
-            }
-            log_properties['custom_dimensions'].update(user_interactions_properties)
-        
-        logger.info(f"ConversationalRetrievalChain", extra=log_properties)
-
-        # Replace answer with filtered message
-        if was_message_filtered:
-            answer = config.messages.post_answering_filter
-
-        # Replace [[url]] with [docx] for citation feature to work
-        source_urls = re.findall(r'\[\[(.*?)\]\]', answer)
-        for idx, url in enumerate(source_urls):
-            answer = answer.replace(f'[[{url}]]', f'[doc{idx+1}]')
-
-        # create return message object
-        messages = [
-            {
-                "role": "tool",
-                "content": {"citations": [], "intent": result["generated_question"]},
-                "end_turn": False,
-            }
-        ]
-        
-        container_sas = self.blob_client.get_container_sas()
-        for url_idx, url in enumerate(source_urls):
-            # Check which result['source_documents'][x].metadata['source'] matches the url
-            idx = None
-            try:
-                idx = [doc.metadata['source'] for doc in result["source_documents"]].index(url)
-            except ValueError:
-                logging.info('Could not find source document for url: ' + url)
-            if idx is not None:
-                doc = result["source_documents"][idx]
-            
-                # Then update the citation object in the response, it needs to have filepath and chunk_id to render in the UI as a file
-                messages[0]["content"]["citations"].append(
-                    {
-                        "content": doc.metadata["source"].replace(
-                            "_SAS_TOKEN_PLACEHOLDER_", container_sas
-                        ) + "\n\n\n" + doc.page_content,
-                        "id": url_idx,
-                        "chunk_id": doc.metadata["chunk"],
-                        "title": doc.metadata["title"], # we need to use original_filename as LangChain needs filename-chunk as unique identifier
-                        "filepath": doc.metadata["title"],
-                        "url": doc.metadata["source"].replace(
-                            "_SAS_TOKEN_PLACEHOLDER_", container_sas
-                        ),
-                        "metadata": doc.metadata,
-                    })
-        if messages[0]["content"]["citations"] == []:
-            answer = re.sub(r'\[doc\d+\]', '', answer)
-        messages.append({"role": "assistant", "content": answer, "end_turn": True})
-        # everything in content needs to be stringified to work with Azure BYOD frontend
-        messages[0]["content"] = json.dumps(messages[0]["content"])
-        return messages
+        # log_properties = {
+        #     "custom_dimensions": {
+        #     }
+        # }
+        # if config.logging.log_tokens:
+        #     tokens_properties = {
+        #         "totalTokens": cb.total_tokens + post_total_tokens,
+        #         "promptTokens": cb.prompt_tokens + post_prompt_tokens,
+        #         "completionTokens": cb.completion_tokens + post_completion_tokens,
+        #     }
+        #     log_properties['custom_dimensions'].update(tokens_properties)
+        #
+        # if config.logging.log_user_interactions:
+        #     user_interactions_properties = {
+        #         "userQuestion": question,
+        #         "userChatHistory": chat_history,
+        #         "generatedQuestion": result["generated_question"],
+        #         "sourceDocuments": list(map(lambda x: json.dumps(x.metadata), result["source_documents"])),
+        #         "messageFiltered": was_message_filtered
+        #     }
+        #     log_properties['custom_dimensions'].update(user_interactions_properties)
+        #
+        # logger.info(f"ConversationalRetrievalChain", extra=log_properties)
+        #
+        # # Replace answer with filtered message
+        # if was_message_filtered:
+        #     answer = config.messages.post_answering_filter
+        #
+        # # Replace [[url]] with [docx] for citation feature to work
+        # source_urls = re.findall(r'\[\[(.*?)\]\]', answer)
+        # for idx, url in enumerate(source_urls):
+        #     answer = answer.replace(f'[[{url}]]', f'[doc{idx+1}]')
+        #
+        # # create return message object
+        # messages = [
+        #     {
+        #         "role": "tool",
+        #         "content": {"citations": [], "intent": result["generated_question"]},
+        #         "end_turn": False,
+        #     }
+        # ]
+        #
+        # # container_sas = self.blob_client.get_container_sas()
+        # for url_idx, url in enumerate(source_urls):
+        #     # Check which result['source_documents'][x].metadata['source'] matches the url
+        #     idx = None
+        #     try:
+        #         idx = [doc.metadata['source'] for doc in result["source_documents"]].index(url)
+        #     except ValueError:
+        #         logging.info('Could not find source document for url: ' + url)
+        #     if idx is not None:
+        #         doc = result["source_documents"][idx]
+        #
+        #         # Then update the citation object in the response, it needs to have filepath and chunk_id to render in the UI as a file
+        #         messages[0]["content"]["citations"].append(
+        #             {
+        #                 "content": doc.metadata["source"].replace(
+        #                     "_SAS_TOKEN_PLACEHOLDER_", "container_sas"
+        #                 ) + "\n\n\n" + doc.page_content,
+        #                 "id": url_idx,
+        #                 "chunk_id": doc.metadata["chunk"],
+        #                 "title": doc.metadata["title"], # we need to use original_filename as LangChain needs filename-chunk as unique identifier
+        #                 "filepath": doc.metadata["title"],
+        #                 "url": doc.metadata["source"].replace(
+        #                     "_SAS_TOKEN_PLACEHOLDER_", "container_sas"
+        #                 ),
+        #                 "metadata": doc.metadata,
+        #             })
+        # if messages[0]["content"]["citations"] == []:
+        #     answer = re.sub(r'\[doc\d+\]', '', answer)
+        # messages.append({"role": "assistant", "content": answer, "end_turn": True})
+        # # everything in content needs to be stringified to work with Azure BYOD frontend
+        # messages[0]["content"] = json.dumps(messages[0]["content"])
+        # return messages
 
 
     def handle_question(self, question, chat_history):

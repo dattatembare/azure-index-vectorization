@@ -10,12 +10,10 @@
 }
 
 .answerText {
-    font-family: "Segoe UI";
-    font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: #323130;
+    color: #040c13;
     flex: none;
     order: 1;
     align-self: stretch;
@@ -42,12 +40,9 @@
 }
 
 .answerDisclaimer {
-    font-family: "Segoe UI";
-    font-style: normal;
     font-weight: 400;
     font-size: 12px;
     line-height: 16px;
-
     display: flex;
     align-items: center;
     text-align: center;
@@ -59,12 +54,10 @@
 
 .citationContainer {
     margin-left: 10px;
-    font-family: "Segoe UI";
     font-style: normal;
     font-weight: 600;
     font-size: 12px;
     line-height: 16px;
-
     color: #115EA3;
     display: flex;
     flex-direction: row;
@@ -94,7 +87,6 @@
     flex: none;
     flex-grow: 0;
     z-index: 2;
-    font-family: "Segoe UI";
     font-style: normal;
     font-weight: 600;
     font-size: 10px;
@@ -127,7 +119,6 @@
 .accordionTitle {
     margin-right: 5px;
     margin-left: 10px;
-    font-family: "Segoe UI";
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -156,7 +147,6 @@
     order: 2;
     flex-grow: 0;
     z-index: 2;
-    font-family: "Segoe UI";
     font-style: normal;
     font-weight: 600;
     font-size: 10px;

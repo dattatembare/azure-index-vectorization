@@ -1,7 +1,7 @@
-import { ChatResponse, ConversationRequest } from "./models";
+import {ConversationRequest} from "./models";
 
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
-    const response = await fetch("/api/conversation/azure_byod", {
+    return await fetch("/api/conversation/azure_byod", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -11,13 +11,11 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
         }),
         signal: abortSignal
     });
-
-    return response;
 }
 
 
-export async function customConversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
-    const response = await fetch("/api/conversation/custom", {
+export async function customConversationApi(options: ConversationRequest, abortSignal: AbortSignal, employeeNumber: string | number | undefined): Promise<Response> {
+    return await fetch(`/api/conversation/custom/${employeeNumber}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -28,6 +26,4 @@ export async function customConversationApi(options: ConversationRequest, abortS
         }),
         signal: abortSignal
     });
-
-    return response;
 }

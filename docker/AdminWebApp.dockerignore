@@ -6,4 +6,3 @@ backend/__pycache__
 backend/environment.yml
 backend/host.json
 backend/local.settings.json
-data
